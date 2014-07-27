@@ -38,6 +38,17 @@ Question.find = function(query,cb){
   });
 };
 
+Question.findById = function(id, cb){
+  id = (typeof id === 'string') ? Mongo.ObjectID(id) : id;
+  Question.collection.findOne({_id:id}, function(err, qstn){
+     cb(err, linktoProto(qstn));
+  });
+};
+
+Question.deleteById = function(id, cb){
+  id = (typeof id === 'string') ? Mongo.ObjectID(id) : id;
+  Question.collection.findAndRemove({_id : id}, cb);
+};
 module.exports = Question;
 
 // PRIVATE FUNCTIONS //

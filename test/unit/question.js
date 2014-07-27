@@ -128,6 +128,29 @@ describe('Question', function() {
     });
   });
 
+  describe('.findById', function(){
+    it('should find a question', function(done) {
+      Question.findById(Q1._id, function(err,qstns){
+      expect(Q1).to.be.instanceof(Question);
+      expect(Q1.name).to.equal('q1');
+      expect(Q1.users[0].name).to.equal('Jane');
+      expect(Q1.users[0]).to.respondTo('collectA');
+      expect(Q1.users[0]).to.respondTo('collectP');
+      done();
+      });
+    });
+  });
+
+  describe('.deleteById', function(){
+    it('should delete a question', function(done) {
+      Question.deleteById(Q1._id, function() {
+        Question.find({}, function(err, qstns){
+          expect(qstns).to.have.length(1);
+          done();
+        });
+      });
+    });
+  });
 
   //End Braces
 });
