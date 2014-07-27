@@ -28,10 +28,41 @@ Question.prototype.save = function(cb){
  Question.collection.save(this, cb);
 };
 
-
-
-
-
-
+Question.find = function(query,cb){
+  Question.collection.find(query).toArray(function(err,qstns) {
+    for(var i = 0; i < qstns.length; i++){
+      qstns[i] = linktoProto(qstns[i]); 
+      //qstns[i].users = linktoProto(qstns[i].users);
+    }
+    cb(err, qstns);
+  });
+};
 
 module.exports = Question;
+
+// PRIVATE FUNCTIONS //
+
+function linktoProto(qstn){
+  qstn = _.create(Question.prototype, qstn);
+
+  for(var i = 0; i < qstn.users.length; i++) {
+    qstn.users[i] = _.create(User.prototype, qstn.users[i]);
+
+    //for(var j = 0; j < qstn.users[i].answers.length; i++) {
+      //qstn.users[i].answers[j] = _.create(Answer.prototype, qstn.users[i].answers[j]);
+    //}
+
+    //for(var k = 0; j < qstn.users[i].predictions.length; i++) {
+      //qstn.users[i].predictions[k] = _.create(Answer.prototype, qstn.users[i].predictions[k]);
+    //}
+  }
+  
+    //for(var j = 0; j < qstn.users[j].answers.length; j++) {
+      //qstn.users[j].answers[j] = _.create(Answer.prototype, qstn.users[j].answers[j]);
+    //}
+  return qstn;
+}
+
+
+
+

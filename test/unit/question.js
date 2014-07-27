@@ -31,19 +31,34 @@ describe('Question', function() {
     var sam = new User('Joe','22', 'Male');
     
     var a1 = new Answer('q1','b');
-    var a1_1 = new Answer('q1', 'b');
-    var a1_2 = new Answer('q1', 'd');
-    var a1_3 = new Answer('q1', 'a');
+    var a11 = new Answer('q1', 'b');
+    var a12 = new Answer('q1', 'd');
+    var a13 = new Answer('q1', 'a');
 
     var a2 = new Answer('q2','c');
-    var a2_1 = new Answer('q2', 'c');
-    var a2_2 = new Answer('q2', 'b');
-    var a2_3 = new Answer('q2', 'a');
-     
+    var a21 = new Answer('q2', 'c');
+    var a22 = new Answer('q2', 'b');
+    var a23 = new Answer('q2', 'a');
+    
+    var p1 = new Prediction('q1','20');
+    var p11 = new Prediction('q1','20');
+    var p12 = new Prediction('q1','50');
+    var p13 = new Prediction('q1','25');
+
+    var p2 = new Prediction('q1','20');
+    var p21 = new Prediction('q1','20');
+    var p22 = new Prediction('q1','50');
+    var p23 = new Prediction('q1','25');
+
     jane.answers.push(a1, a2);
-    joe.answers.push(a1_1, a2_1);
-    sally.answers.push(a1_2, a2_2);
-    sam.answers.push(a1_3, a2_3);
+    joe.answers.push(a11, a21);
+    sally.answers.push(a12, a22);
+    sam.answers.push(a13, a23);
+
+    jane.predictions.push(p1, p2);
+    joe.predictions.push(p11, p21);
+    sally.predictions.push(p12, p22);
+    sam.predictions.push(p13, p23);
     
     Q1.users.push(jane, joe, sally, sam);
     Q2.users.push(jane, joe, sally, sam);
@@ -71,6 +86,8 @@ describe('Question', function() {
       expect(Q1.name).to.equal('q1');
       expect(Q1.content).to.equal('For q1, choose a/b/c/d');
       expect(Q1.users).to.have.length(1);
+      expect(Q1.users[0].answers).to.have.length(1);
+      expect(Q1.users[0].predictions).to.have.length(1);
       expect(Q1.users[0].answers[0]).to.equal(a1);
       expect(Q1.users[0].predictions[0]).to.equal(p1);
 
@@ -86,6 +103,30 @@ describe('Question', function() {
       expect(Q1._id).to.be.instanceof(Mongo.ObjectID);
     });
    });
+
+  describe('.find', function(){
+    it('should find all questions in mongodb', function(done) {
+      Question.find({}, function(err, qstns){
+        expect(qstns).to.have.length(2);
+        expect(qstns[0].users[0]).to.respondTo('collectA');
+        expect(qstns[0].users).to.have.length(4);
+        expect(qstns[0].users).to.have.length(4); 
+        expect(qstns[0].users[0].answers).to.have.length(2);
+        expect(qstns[0].users[0].predictions).to.have.length(2);
+        expect(qstns[0].users[0].answers[0].currentQ).to.equal('q1');
+        //console.log(qstns[1].users[0].answers[0]);
+        //console.log(qstns[1].users[0].predictions[0]);
+        done();
+      });
+    });
+
+    it('should find some question in mongodb', function(done){
+      Question.find({name: 'q1'}, function(err, qstns){
+      expect(qstns).to.have.length(1);
+      done();
+      });
+    });
+  });
 
 
   //End Braces
