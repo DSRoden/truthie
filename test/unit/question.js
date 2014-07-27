@@ -20,9 +20,41 @@ describe('Question', function() {
     });
   });
 
-  //beforeEach(function(done){
-  
-  //});
+  beforeEach(function(done){
+    Question.collection.remove(function(){
+    Q1 = new Question('q1', 'For q1, choose a/b/c/d'); 
+    Q2 = new Question('q2', 'For q2, choose a/b/c/d'); 
+    
+    var jane = new User('Jane','25', 'Female');
+    var joe = new User('Joe','25', 'Male');
+    var sally = new User('Sally','23', 'Male');
+    var sam = new User('Joe','22', 'Male');
+    
+    var a1 = new Answer('q1','b');
+    var a1_1 = new Answer('q1', 'b');
+    var a1_2 = new Answer('q1', 'd');
+    var a1_3 = new Answer('q1', 'a');
+
+    var a2 = new Answer('q2','c');
+    var a2_1 = new Answer('q2', 'c');
+    var a2_2 = new Answer('q2', 'b');
+    var a2_3 = new Answer('q2', 'a');
+     
+    jane.answers.push(a1, a2);
+    joe.answers.push(a1_1, a2_1);
+    sally.answers.push(a1_2, a2_2);
+    sam.answers.push(a1_3, a2_3);
+    
+    Q1.users.push(jane, joe, sally, sam);
+    Q2.users.push(jane, joe, sally, sam);
+    
+    Q1.save(function(){
+      Q2.save(function(){
+        done();
+      });
+    });
+   });
+  });
 
   describe('constructor', function() {
     it('should create a new Question object', function(){
@@ -48,6 +80,13 @@ describe('Question', function() {
       expect(Q1.loscore).to.equal(0);
     });
   });
+
+  describe('#save', function(){
+    it('should save a question to Question.collection', function(){
+      expect(Q1._id).to.be.instanceof(Mongo.ObjectID);
+    });
+   });
+
 
   //End Braces
 });

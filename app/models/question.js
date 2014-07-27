@@ -18,6 +18,15 @@ function Question(name, content){
   this.loscore = 0;
 }
 
+Object.defineProperty(Question, 'collection', {
+  get: function(){
+    return global.mongodb.collection('questions');
+  }
+});
+
+Question.prototype.save = function(cb){
+ Question.collection.save(this, cb);
+};
 
 
 
