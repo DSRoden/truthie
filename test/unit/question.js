@@ -102,6 +102,16 @@ describe('Question', function() {
     it('should save a question to Question.collection', function(){
       expect(Q1._id).to.be.instanceof(Mongo.ObjectID);
     });
+
+    it('should update an existing question from Question.collection', function(done){
+      Q1.name = 'Question1*';
+      Q1.save(function() {
+        Question.findById(Q1._id, function(err, qstn){
+          expect(qstn.name).to.equal('Question1*');
+          done();
+        });
+      });
+    });
    });
 
   describe('.find', function(){
@@ -151,6 +161,7 @@ describe('Question', function() {
       });
     });
   });
+
 
   //End Braces
 });
